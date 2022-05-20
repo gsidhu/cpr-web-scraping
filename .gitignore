@@ -1,3 +1,11 @@
+*.csv
+node_modules/
+mumbai/
+chennai/
+delhi/
+cpcb/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
