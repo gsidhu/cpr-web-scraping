@@ -1,3 +1,8 @@
+# Mumbai Curler v1
+# Author: Gurjot Sidhu
+# For: CPR Climate Team, New Delhi
+# Description: This script pings the BMC server and saves the result as an aggregated CSV file. Data from 01.01.2010 to 31.12.2015 is downloaded by altering the date, gender and ward fields in the request payload.
+
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -55,6 +60,8 @@ wardnames = {'50000225': 'A  Ward', '50000226': 'B  Ward', '50016000': 'BHAG', '
 for y in years:
   for m in range(1, 13):
     for d in range(1, 32):
+      if y == '2015' and m < 10 and d < 2:
+        continue
       # skip the 31st in 30-day months
       if m in [4,6,9,11] and d > 30:
         continue
@@ -73,14 +80,16 @@ for y in years:
 
       for gender in range(1,4):
         data['//form/gender'] = gender
-
+        
         gender = ['M', 'F', 'T'][gender-1]
+        filename = './mumbai/' + '-'.join([str(d),str(m),str(y),str(gender)])
 
+        all_wards = []
+        
+        csvfile = open(filename + '.csv', 'w+', newline='\n')
+        spamwriter = csv.writer(csvfile, delimiter=';',)
         ## Add Ward
         for w in wards:
-          if y == '2015' and w == '50000042':
-            continue
-
           data['//form/ward2'] = w
         
           # POST request
@@ -91,8 +100,6 @@ for y in years:
           params['sap-params'] = 'd19iYWNrPTAlMjAmd19iYWNrMT0xJTIwJndfbmE9MCZ3X2NoZWNrbW9kZT1DUkVBVEUmdl9jeWJyX2NpdD0mdXdzX21vZGU9Q1JFQVRFJnV3c19hcHBsaWNhdGlvbj1DUk1fT1JERVImdXdzX3NlcnZpY2VfaWQ9Wk1fRFRIX0FQUCZ1d3NfZ3VpZD0wOTEwNjkyRDI0NjkxRUVDQjY4NDVENDc1QTkzOUI4OCZ1d3NfdmVyc2lvbj0wMDAwMDAwMDAx'
 
           response = requests.get('https://crmapp.mcgm.gov.in:8080/sap(bD1lbiZjPTkwMCZwPTMzNzU0JnY9Ny41MA==)/bc/bsp/sap/ZMCGM_XBSP_DAPP/DAPP_02', params=params, cookies=cookies, headers=headers)
-
-          filename = './mumbai/' + '-'.join([str(d),str(m),str(y),str(gender),str(w)])
           # with open(filename + '.html', "w") as f:
           #   f.write(response.text)
 
@@ -105,23 +112,28 @@ for y in years:
           cells = soup.findAll('td')
 
           if len(cells) > 1:
-            with open(filename + '.csv', 'w+', newline='\n') as csvfile:
-              spamwriter = csv.writer(csvfile, delimiter=';',)
-              for r in range(0,len(cells),8):
-                row = [
-                  cells[r+1].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                  cells[r+2].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                  cells[r+3].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                  cells[r+4].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                  cells[r+5].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                  cells[r+6].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                  cells[r+7].get_text(strip=True).replace('\n', '').replace('\r', ''),
-                ]
-                if r == 0:
-                  row.append('Ward')
-                else:
-                  row.append(wardnames[w])
-                
-                spamwriter.writerow(row)
-          
+            for r in range(0,len(cells),8):
+              row = [
+                cells[r+1].get_text(strip=True).replace('\n', '').replace('\r', ''),
+                cells[r+2].get_text(strip=True).replace('\n', '').replace('\r', ''),
+                cells[r+3].get_text(strip=True).replace('\n', '').replace('\r', ''),
+                cells[r+4].get_text(strip=True).replace('\n', '').replace('\r', ''),
+                cells[r+5].get_text(strip=True).replace('\n', '').replace('\r', ''),
+                cells[r+6].get_text(strip=True).replace('\n', '').replace('\r', ''),
+                cells[r+7].get_text(strip=True).replace('\n', '').replace('\r', ''),
+              ]
+              if r == 0:
+                row.append('Ward')
+              else:
+                row.append(wardnames[w])
+              
+              if r == 0 and len(all_wards) > 0:
+                continue
+              else:
+                all_wards.append(row)
+        
+        for rrr in all_wards:
+          spamwriter.writerow(rrr)
+
+        csvfile.close()
           # time.sleep(2)

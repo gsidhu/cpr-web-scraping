@@ -1,3 +1,8 @@
+# Chennai Curler v1
+# Author: Gurjot Sidhu
+# For: CPR Climate Team, New Delhi
+# Description: This script pings the GCC server and saves the result in a CSV file. Data from 01.01.2010 to 31.12.2020 is downloaded by altering the date and gender fields in the request payload.
+
 import time
 import requests
 from bs4 import BeautifulSoup
@@ -37,8 +42,8 @@ params = {
     'do': 'getBasicRecords',
 }
 
-years = ['2015', '2014', '2013', '2012', '2011', '2010']
-# years = ['2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010']
+# years = ['2015', '2014', '2013', '2012', '2011', '2010']
+years = ['2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010']
 
 data = {
     'dateOfDeath': '2020-01-01',
@@ -56,8 +61,6 @@ data = {
 for y in years:
   for m in range(1, 7):
     for d in range(1, 32):
-      if y == '2015' and m == 1:
-        continue
       # skip the 31st in 30-day months
       if m in [4,6,9,11] and d > 30:
         continue
