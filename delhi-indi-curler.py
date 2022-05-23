@@ -37,7 +37,7 @@ donefiles = os.listdir('./delhi/data')
 
 for f in files:
   filename = './delhi/' + f
-  if (f.strip('.html') + '.csv') in donefiles or f == '.DS_Store':
+  if (f.strip('.html') + '.csv') in donefiles or f == '.DS_Store' or filename == './delhi/data':
     continue
 
   with open(filename, 'r') as ff:

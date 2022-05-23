@@ -4,7 +4,7 @@ Scrapes data from a bunch of websites.
 ## Files of interest
 1. [`chennai-curler.py`](./chennai-curler.py) and [`chennai-pdf-scraper.py`](./chennai-pdf-scraper.py)
 2. [`mumbai-curler.py`](./mumbai-curler.py)
-3. [`delhi-curler.py`](./delhi-curler.py)
+3. [`delhi-curler.py`](./delhi-curler.py) and [`delhi-indi-curler.py'](./delhi-indi-curler.py)
 4. `cpcb-curler.py`
 5. ...
 
