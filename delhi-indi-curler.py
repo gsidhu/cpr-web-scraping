@@ -3,7 +3,6 @@
 # For: CPR Climate Team, New Delhi
 # Description: This script reads the html files downloaded by delhi-curler.py and pings the NDMC website to scrape the data for all individuals mentioned in each html file.
 
-
 import time
 import csv
 import requests

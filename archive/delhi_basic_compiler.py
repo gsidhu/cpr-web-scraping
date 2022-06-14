@@ -1,7 +1,7 @@
 # Delhi Curler v1
 # Author: Gurjot Sidhu
 # For: CPR Climate Team, New Delhi
-# Description: This script compiles the basic data from all the html files in the `delhi`` folder.
+# Description: This script compiles the basic data from all the html files in the `delhi` folder.
 
 import csv 
 import os 
